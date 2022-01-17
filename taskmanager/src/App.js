@@ -1,48 +1,75 @@
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import TaskList from './Component/TaskList.js';
-import NewTask from './Component/NewTask.js';
-import TopBar from './Component/TopBar.js';
-import Time from './Component/Time.js';
-import Calendarfunc from './Component/Calendarfunc.js';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import TaskList from './Components/TaskList';
+import NewTask from './Components/NewTask';
+import TopBar from './Components/TopBar';
+import Time from './Components/Time';
+import Calendarfunc from './Components/Calendarfunc';
+import Menu from './Components/Menu';
+import { apiHost } from './Components/Const';
 
-// let taskList = [{
-//   id: 1,
-//   name: 'Take out the trash',
-//   description: 'Take out the trash to the front of the house',
-//   assignedTo: 'Nick',
-//   dueDate: '2020-09-20',
-//   status: 'TODO'
-// }, {
-//   id: 2,
-//   name: 'Cook Dinner',
-//   description: 'Prepare a healthy serving of pancakes for the family tonight',
-//   assignedTo: 'Nick',
-//   dueDate: '2020-09-20',
-//   status: 'TODO'
-// }]
+async function fetchData(setTask) {
+	const res = await fetch(`${apiHost}`)
+	const { task } = await res.json()
+	setTask(task)
+	console.log(task)
+}
+
+async function fetchSetData(task) {
+	await fetch(apiHost, {
+		method: "PUT",
+		headers: {
+			'Content-type': 'application/json'
+		},
+		body: JSON.stringify({ task })
+	})
+}
 
 function App() {
-  return (
-    <div>
-      <BrowserRouter>
-        <Link to="/calendar">Calendar</Link>
-        <Link to="/newTask">New Task</Link>
+	const [task, setTask] = useState([]);
+	const submittingStatus = useRef(false)
+
+	useEffect(() => {
+		if (!submittingStatus.current) {
+			return
+		}
+		fetchSetData(task)
+			.then(data => submittingStatus.current = false)
+	}, [task])
+
+	useEffect(() => {
+		fetchData(setTask)
+	}, [])
+
+	return (
+		<div>
+			{/* <Menu /> */}
+			{/* <Link to="/">HOME</Link> */}
+			{/* <Link to="/newTask">New Task</Link>
         <Link to="/taskList">Task List</Link>
-        <Link to="/">HOME</Link>
-        <Routes>
-          <Route path="/" element={
-            <>
-              <Time />
-              <TopBar />
-              <NewTask />
-              <TaskList />
-            </>
-          }/>
-          <Route path="/calendar" element={<Calendarfunc />}/>
-        </Routes>
-      </BrowserRouter>
-    </div>
-  );
+      <Link to="/calendar">Calendar</Link> */}
+			<BrowserRouter>
+				<Routes>
+					{/* <Route path="/" element={<Menu />}> */}
+						<Route path="/" element={
+							<>
+								<TopBar />
+								{/* <Menu /> */}
+								{/* <Time /> */}
+								<TaskList taskList={task} editTask={setTask} submittingStatus={submittingStatus} />
+								<NewTask addTask={setTask} submittingStatus={submittingStatus} />
+							</>
+						} />
+
+						<Route path="/taskData/1/:id" element={<TaskList taskList={task} />} />
+
+						<Route path="/calendar" element={<Calendarfunc />} />
+
+					{/* </Route> */}
+				</Routes>
+			</BrowserRouter>
+		</div>
+	);
 }
 
 export default App;

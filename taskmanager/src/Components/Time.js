@@ -1,4 +1,5 @@
 import { useState } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Time() {
     const [date, setDate] = useState(new Date());
@@ -12,13 +13,13 @@ export default function Time() {
     };
     
     return (
-        <div onChange={componentDidMount()}>
-            <div>
+        <div className="topBarDateTime" onChange={componentDidMount()}>
+            <span>
                 {date.toLocaleDateString('en-US')}
-            </div>
-            <div>
-                {date.toLocaleTimeString('en-US')}
-            </div>
+            </span>
+            <span>
+                {date.toLocaleTimeString('en-US', { hour12: false })}
+            </span>
         </div>
     );
 };
