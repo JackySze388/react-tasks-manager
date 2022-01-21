@@ -1,3 +1,9 @@
+p {
+    font-family: 'Outfit', sans-serif;
+    margin: 0px !important;
+    color: rgb(70, 70, 70);
+}
+
 /* .appBorder {
     border: solid red;
     padding: 32px;
@@ -8,10 +14,19 @@
     border-radius: 10px;
 }
 
-.navbar-brand {
+*::-webkit-scrollbar {
+    width: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: grey;
+    border-radius: 20px;
+  }
+
+/* .navbar-brand {
     width: 100%;
     text-align: center;
-}
+} */
 
 /* .topBarTitle {
     display: block;
@@ -52,10 +67,26 @@
 .cardTitle {
     display: flex;
     align-items: center;
+    padding: 15px 10px;
+    background-color: white;
+    /* z-index: ; */
 }
 
 .cardTitle h5 {
     margin: auto 10px;
+}
+
+.card {
+    height: 250px;
+}
+
+.card-body {
+    overflow: auto;
+    padding: 0px !important;
+}
+
+.card-body p {
+    padding: 0px 20px !important;
 }
 
 .linkText {
@@ -78,7 +109,7 @@
 
 .listButton {
     margin-left: auto;
-    border-radius: 10px;
+    display: flex;
 }
 
 .btn-sm {
@@ -101,11 +132,27 @@
     right: 0;
     bottom: 0;
     padding: 20px;
-    opacity: 80%;
+    opacity: 65%;
+    z-index: 9999;
+}
+
+.ArrowUp {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    padding: 3px 3px;
+    opacity: 65%;
+    z-index: 9999;
 }
 
 .hide {
     display: none;
+}
+
+.react-calendar {
+    width: 70vw !important;
+    padding: 32px 16px !important;
+    margin: 64px auto 0px;
 }
 
 @media screen and (max-width: 500px) {
