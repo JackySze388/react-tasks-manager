@@ -63,11 +63,10 @@ export default function Task({ task, editTask }) {
     }
 
     return (
-        <div class="">
+        <div>
             <div class="card">
                 <div class="card-body">
-                    <p className="cardTitle">
-                        <input type="checkbox" value=""></input>
+                    <div className="cardTitle sticky-top">
                         <h5 class="card-title">{task.name}</h5>
                         <span className="listButton">
                             <Button className="btn-sm listEdit" onClick={handleShow}>
@@ -77,15 +76,13 @@ export default function Task({ task, editTask }) {
                                 <Minus />
                             </Button>
                         </span>
-                    </p>
-                    <p class="card-text">
-                        {/* {task.status} */}
-                        {/* <br /> */}
+                    </div>
+                    <p class="card-body">
                         {task.description}
                     </p>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted">Last updated 3 mins ago</small>
+                    <small class="text-muted"><p><span>{task.status}</span> Last updated 3 mins ago</p></small>
                 </div>
             </div>
 

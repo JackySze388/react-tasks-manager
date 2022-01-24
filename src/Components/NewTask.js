@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { v4 } from "uuid";
 import { ReactComponent as AddTask } from '../img/addTask.svg';
+import { ReactComponent as ArrowUp } from '../img/arrowUp.svg';
+import { Link } from "react-router-dom";
 
-export default function NewTask({ addTask, submittingStatus }) {
+export default function NewTask({ addTask }) {
 	const [show, setShow] = useState(false);
 	const handleShow = () => setShow(true);
 	const handleClose = () => setShow(false);
@@ -19,7 +21,7 @@ export default function NewTask({ addTask, submittingStatus }) {
 
 	const [description, setDescription] = useState("");
 	const descriptionChange = e => {
-		setDescription(e.target.value)
+		setDescription(e.target.value.toString())
 	}
 
 	const [assignedTo, setAssignedTo] = useState("");
@@ -39,7 +41,6 @@ export default function NewTask({ addTask, submittingStatus }) {
 
 	const handleSubmit = e => {
 		e.preventDefault()
-		// submittingStatus.current = true
 		setId(prev => prev + 1)
 		addTask(prevTask => {
 			return [...prevTask, {
@@ -59,41 +60,65 @@ export default function NewTask({ addTask, submittingStatus }) {
 		setStatus("NEW")
 	}
 
+	// Setting of Buttom for Back to top
+	const [showButton, setShowButton] = useState(false);
+
+	useEffect(() => {
+		window.addEventListener("scroll", () => {
+			if (window.pageYOffset > 800) {
+				setShowButton(true);
+			} else {
+				setShowButton(false);
+			}
+		});
+	}, []);
+
+	const handleBackToTop = () => {
+		window.scroll({
+			top: 0,
+			behavior: 'smooth'
+		})
+	}
+
 	return (
 		<div className="newTask" >
-			<Button className="addTaskbtn rounded-circle" size="lg" onClick={handleShow}>
+			{showButton &&
+				<Button className="ArrowUp rounded-circle btn-sm btn-dark" onClick={handleBackToTop}><ArrowUp /></Button>
+			}
+
+			<Button className="addTaskbtn rounded-circle" size="md" onClick={handleShow}>
 				<AddTask />
 			</Button>
 
 			<Modal show={show} onHide={handleClose} backdrop="static">
 				<Modal.Header closeButton>
-					<Modal.Title>New Task</Modal.Title>
+					<Modal.Title><p>New Task</p></Modal.Title>
 				</Modal.Header>
 
 				<Modal.Body>
 					<Form onSubmit={handleSubmit} className="d-grid">
 						<Form.Group className="mb-3">
-							<Form.Label>Name</Form.Label>
+							<Form.Label><p>Name</p></Form.Label>
 							<Form.Control id="name" placeholder="Name" value={name} onChange={nameChange} />
 						</Form.Group>
 
 						<Form.Group className="mb-3">
-							<Form.Label>Description</Form.Label>
+							<Form.Label><p>Description</p></Form.Label>
 							<Form.Control id="description" as="textarea" placeholder="Description" value={description} onChange={descriptionChange} />
 						</Form.Group>
 
 						<Form.Group className="mb-3">
-							<Form.Label>Assigned To</Form.Label>
+							<Form.Label><p>Assigned To</p></Form.Label>
 							<Form.Control placeholder="Assigned To" value={assignedTo} onChange={assignedToChange} />
 						</Form.Group>
 
 						<Form.Group className="mb-3">
-							<Form.Label>Due Date</Form.Label>
+							<Form.Label><p>Due Date</p></Form.Label>
 							<Form.Control type="date" placeholder="Due Date" value={dueDate} onChange={dueDateChange} />
 						</Form.Group>
 
 						<Form.Group className="mb-3">
-							<Form.Label>Status</Form.Label>
+							<Form.Label><p>Status</p></Form.Label>
 							<Form.Select value={status} onChange={statusChange} >
 								<option value="NEW">NEW</option>
 								<option value="DONE">DONE</option>
@@ -104,14 +129,14 @@ export default function NewTask({ addTask, submittingStatus }) {
 							<Form.Check type="checkbox" label="Task1" />
 						</Form.Group>
 						<Button variant="success" onClick={handleClose} type="submit">
-							Submit
+							<p>Submit</p>
 						</Button>
 					</Form>
 				</Modal.Body>
 
 				<Modal.Footer>
 					<Button variant="secondary" onClick={handleClose}>
-						Close
+						<p>1</p>
 					</Button>
 				</Modal.Footer>
 			</Modal>

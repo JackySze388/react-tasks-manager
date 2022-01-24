@@ -25,10 +25,10 @@ import Menu from './Menu';
 export default function TaskList({ taskList, editTask, submittingStatus }) {
 
     return (
-        <div class="d-flex taskList">
+        <div class="d-flex taskList mx-4">
             {taskList.map(task => {
                 return (
-                    <div class="eachTask col-6" key={task.key} >
+                    <div class="eachTask col-12 col-md-6" key={task.key} >
                         {submittingStatus.current = true}
                         <Task task={task} editTask={editTask} />
                     </div>
