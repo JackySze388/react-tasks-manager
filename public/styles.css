@@ -69,10 +69,20 @@ p {
 .card-body {
     overflow: auto;
     padding: 0px !important;
+    white-space: pre-line;
 }
 
 .card-body p {
     padding: 0px 20px !important;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-footer small {
+    align-self: center;
 }
 
 .linkText {
