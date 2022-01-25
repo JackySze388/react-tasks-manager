@@ -5,6 +5,8 @@ import Form from "react-bootstrap/Form";
 import { v4 } from "uuid";
 import { ReactComponent as AddTask } from '../img/addTask.svg';
 import { ReactComponent as ArrowUp } from '../img/arrowUp.svg';
+import { db } from "../firebase";
+import { set, ref } from "firebase/database";
 
 export default function NewTask({ addTask }) {
 	const [show, setShow] = useState(false);
@@ -19,7 +21,7 @@ export default function NewTask({ addTask }) {
 	// 		[id]: value
 	// 	}));
 	// };
-
+	const key = v4()
 	const [id, setId] = useState(1)
 
 	const [name, setName] = useState("");
@@ -35,11 +37,13 @@ export default function NewTask({ addTask }) {
 	const [assignedTo, setAssignedTo] = useState("");
 	const assignedToChange = e => {
 		setAssignedTo(e.target.value)
+		console.log(assignedTo)
 	}
 
 	const [dueDate, setDueDate] = useState("");
 	const dueDateChange = e => {
 		setDueDate(e.target.value)
+		console.log(dueDate)
 	}
 
 	const [status, setStatus] = useState("NEW");
@@ -48,25 +52,43 @@ export default function NewTask({ addTask }) {
 	}
 
 	const handleSubmit = e => {
-			e.preventDefault()
-			setId(prev => prev + 1)
-			addTask(prevTask => {
-				return [{
-					key: v4(),
-					id: id,
-					name: name,
-					description: description,
-					assignedTo: assignedTo,
-					dueDate: dueDate,
-					status: status
-				}, ...prevTask]
-			})
-			setShow(false)
-			setName("")
-			setDescription("")
-			setAssignedTo("")
-			setDueDate("")
-			setStatus("NEW")
+		e.preventDefault()
+		setId(prev => prev + 1)
+		set(ref(db, `/taskData/${key}`), {
+			key: key,
+			id: id,
+			name: name,
+			description: description,
+			assignedTo: assignedTo,
+			dueDate: dueDate,
+			status: status
+		})
+		setShow(false)
+		setName("")
+		setDescription("")
+		setAssignedTo("")
+		setDueDate("")
+		setStatus("NEW")
+
+		// e.preventDefault()
+		// setId(prev => prev + 1)
+		// addTask(prevTask => {
+		// 	return [{
+		// 		key: v4(),
+		// 		id: id,
+		// 		name: name,
+		// 		description: description,
+		// 		assignedTo: assignedTo,
+		// 		dueDate: dueDate,
+		// 		status: status
+		// 	}, ...prevTask]
+		// })
+		// setShow(false)
+		// setName("")
+		// setDescription("")
+		// setAssignedTo("")
+		// setDueDate("")
+		// setStatus("NEW")
 	}
 
 	// Setting of Buttom for Back to top
@@ -74,7 +96,7 @@ export default function NewTask({ addTask }) {
 
 	useEffect(() => {
 		window.addEventListener("scroll", () => {
-			if (window.pageYOffset > 800) {
+			if (window.pageYOffset > 400) {
 				setShowButton(true);
 			} else {
 				setShowButton(false);
@@ -108,13 +130,11 @@ export default function NewTask({ addTask }) {
 					<Form onSubmit={handleSubmit} className="d-grid">
 						<Form.Group className="mb-3">
 							<Form.Label><p>Name</p></Form.Label>
-							{/* <Form.Control id="name" placeholder="Name" value={name} onChange={nameChange} /> */}
 							<Form.Control id="name" placeholder="Name" value={name} onChange={nameChange} required />
 						</Form.Group>
 
 						<Form.Group className="mb-3">
 							<Form.Label><p>Description</p></Form.Label>
-							{/* <Form.Control id="description" as="textarea" placeholder="Description" value={description} onChange={descriptionChange} /> */}
 							<Form.Control id="description" as="textarea" placeholder="Description" value={description} onChange={descriptionChange} />
 						</Form.Group>
 
