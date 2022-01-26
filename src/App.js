@@ -1,52 +1,30 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useState, useEffect, useRef } from 'react';
-import TaskList from './Components/TaskList';
-import NewTask from './Components/NewTask';
-import TopBar from './Components/TopBar';
-import Calendarfunc from './Components/Calendarfunc';
-import { apiHost } from './Components/Const';
-import { db } from "./firebase";
-import { onValue, ref, query, orderByChild } from "firebase/database";
+import Home from './pages/Home';
+import Welcome from './pages/Welcome';
+import Calendarfunc from './pages/Calendarfunc';
+import { Routes, Route } from 'react-router-dom';
+// import { useState, useEffect } from 'react';
+// import { apiHost } from './Components/Const';
+// import { db, auth } from "./firebase";
+// import { onValue, ref } from "firebase/database";
+// import orderBy from 'lodash/orderBy'
 
-async function fetchData(setTask) {
-	const res = await fetch(`${apiHost}`)
-	const { task } = await res.json()
-	setTask(task)
-}
+// async function fetchData(setTask) {
+// 	const res = await fetch(`${apiHost}`)
+// 	const { task } = await res.json()
+// 	setTask(task)
+// }
 
-async function fetchSetData(task) {
-	await fetch(apiHost, {
-		method: "PUT",
-		headers: {
-			'Content-type': 'application/json'
-		},
-		body: JSON.stringify({ task })
-	})
-}
+// async function fetchSetData(task) {
+// 	await fetch(apiHost, {
+// 		method: "PUT",
+// 		headers: {
+// 			'Content-type': 'application/json'
+// 		},
+// 		body: JSON.stringify({ task })
+// 	})
+// }
 
 function App() {
-	const [tasks, setTasks] = useState([]);
-	const submittingStatus = useRef(false)
-
-	useEffect(() => {
-		// auth.onAuthStateChanged((user) => {
-		//   if (user) {
-		// read
-		const dbRef = query(ref(db, `/taskData`), orderByChild('id'))
-		onValue(dbRef, snapshot => {
-			setTasks([]);
-			const data = snapshot.val();
-			if (data !== null) {
-				Object.values(data).map(task => {
-					setTasks((oldArray) => [...oldArray, task]);
-				});
-			}
-		});
-		//   } else if (!user) {
-		// 	navigate("/");
-		//   }
-		// });
-	}, []);
 
 	// useEffect(() => {
 	// 	if (!submittingStatus.current) {
@@ -61,26 +39,13 @@ function App() {
 	// }, [])
 
 	return (
-		<div>
-			<BrowserRouter>
-				<Routes>
-					<Route path="/react-tasks-manager" element={
-						<>
-							<TopBar />
-							<TaskList taskList={tasks} editTask={setTasks} submittingStatus={submittingStatus} />
-							<NewTask addTask={setTasks} submittingStatus={submittingStatus} />
-						</>
-					} />
-					<Route path="/taskList" element={
-						<>
-							<TopBar />
-							<TaskList taskList={tasks} editTask={setTasks} submittingStatus={submittingStatus} />
-						</>
-					} />
-					<Route path="/calendar" element={<Calendarfunc />} />
-				</Routes>
-			</BrowserRouter>
-		</div>
+		// <div>
+			<Routes>
+				<Route path="/react-tasks-manager/" element={<Welcome />} />
+				<Route path="/react-tasks-manager/home" element={<Home />} />
+				<Route path="/react-tasks-manager/calendar" element={<Calendarfunc />} />
+			</Routes>
+		// </div>
 	);
 }
 
