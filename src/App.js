@@ -2,11 +2,11 @@ import Home from './pages/Home';
 import Welcome from './pages/Welcome';
 import Calendarfunc from './pages/Calendarfunc';
 import { Routes, Route } from 'react-router-dom';
+import useLocalStorage from 'use-local-storage'
+import TopBar from './pages/components/TopBar';
+
 // import { useState, useEffect } from 'react';
 // import { apiHost } from './Components/Const';
-// import { db, auth } from "./firebase";
-// import { onValue, ref } from "firebase/database";
-// import orderBy from 'lodash/orderBy'
 
 // async function fetchData(setTask) {
 // 	const res = await fetch(`${apiHost}`)
@@ -38,14 +38,20 @@ function App() {
 	// 	fetchData(setTask)
 	// }, [])
 
+	const [darkMode, setDarkMode] = useLocalStorage("darkMode", false)
+    const handleDarkMode = () => {
+        setDarkMode(!darkMode)
+    }
+
 	return (
-		// <div>
+		<div className={darkMode ? "darkMode" : ""}>
+			<TopBar darkMode={darkMode} handleDarkMode={handleDarkMode} />
 			<Routes>
-				<Route path="/react-tasks-manager/" element={<Welcome />} />
-				<Route path="/react-tasks-manager/home" element={<Home />} />
+				<Route path="/react-tasks-manager/welcome" element={<Welcome />} />
+				<Route path="/react-tasks-manager/" element={<Home />} />
 				<Route path="/react-tasks-manager/calendar" element={<Calendarfunc />} />
 			</Routes>
-		// </div>
+		</div>
 	);
 }
 

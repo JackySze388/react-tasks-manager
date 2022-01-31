@@ -11,21 +11,20 @@ export default function Task({ task }) {
 
     const [show, setShow] = useState(false);
     const handleShow = () => setShow(true);
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false);
+        setInput(task)
+    }
 
-    const [input, setInput] = useState({
-        name: task.name,
-        description: task.description,
-        taskType: task.taskType,
-        dueDate: task.dueDate,
-        status: task.status
-    });
+    const [input, setInput] = useState(task);
 
     const handleInput = e => {
         const { id, value } = e.target;
-        setInput({
-            ...input,
-            [id]: value
+        setInput(prevInput => {
+            return {
+                ...prevInput,
+                [id]: value
+            }
         });
     };
 
@@ -44,35 +43,46 @@ export default function Task({ task }) {
         setShow(false)
     }
 
-    const checkStatus = task.status === "DONE" ? "secondary" : "success";
+    const handleDone = () => {
+        setInput(prevInput => ({ ...prevInput, done: !prevInput.done }))
+        update(ref(db, `/${auth.currentUser.uid}/${task.key}`), {
+            ...input, done: !input.done
+        })
+    }
+
+    const checkStatus = input.done ? "secondary" : "success";
+    const checkTaskType = input.taskType === "Home" ? "danger" : input.taskType === "Entertainment" ? "warning" : "primary";
 
     return (
         <div>
             <div className="card">
-                <div className="card-body">
-                    <div className="cardTitle sticky-top">
-                        <h5 className="card-title">{task.name}</h5>
-                        <span className="listButton">
-                            <Button className="btn-sm listEdit" onClick={handleShow}>
-                                <Edit />
-                            </Button>
-                            <Button className="btn-sm listDelete" onClick={() => handleDelete(task.key)} >
-                                <Minus />
-                            </Button>
-                        </span>
-                    </div>
-                    <p className="card-body">
-                        {task.description}
-                    </p>
+                <div className="cardTitle sticky-top">
+                    <h5 className="card-title">{input.name}</h5>
+                    <span className="cardButton">
+                        <Button className="btn-sm cardEdit" onClick={handleShow}>
+                            <Edit />
+                        </Button>
+                        <Button className="btn-sm cardDelete" onClick={() => handleDelete(task.key)} >
+                            <Minus />
+                        </Button>
+                    </span>
                 </div>
+                <div className="card-body">
+                    <p>{input.description}</p>
+                </div>
+                <small className="dueDateText text-muted">Due Date: {input.dueDate}</small>
                 <div className="card-footer">
-                    <Badge bg={checkStatus}>{task.status}</Badge><small className="text-muted">{task.createdDate}&nbsp;&nbsp;{task.createdTime}</small>
+                    <p>
+                        <Badge className="doneBtn" bg={checkStatus} onClick={handleDone} >{input.done ? "Done" : "ToDo"}</Badge>
+                        <Badge bg={checkTaskType}>{input.taskType}</Badge>
+                    </p>
+                    <small className="text-muted">Created: {task.createdDate}&nbsp;&nbsp;{task.createdTime}</small>
                 </div>
             </div>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>{task.name}</Modal.Title>
+                    <Modal.Title>{input.name}</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
@@ -87,6 +97,6 @@ export default function Task({ task }) {
                     </Button>
                 </Modal.Footer>
             </Modal>
-        </div >
+        </div>
     )
 }

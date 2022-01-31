@@ -25,14 +25,16 @@ import Menu from './Menu';
 export default function TaskList({ taskList }) {
 
     return (
-        <div className="d-flex taskList mx-4">
-            {taskList.map(task => {
-                return (
-                    <div className="eachTask col-12 col-md-6" key={task.key} >
-                        <Task task={task} />
-                    </div>
-                )
-            })}
+        <div className="taskListOutter">
+            <div className="d-flex taskList">
+                {taskList.map(task => {
+                    return (
+                        <div className="eachTask col-12 col-lg-6" key={task.key} >
+                            <Task task={task} />
+                        </div>
+                    )
+                })}
+            </div>
         </div>
     )
 }
